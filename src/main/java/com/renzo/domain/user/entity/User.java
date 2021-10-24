@@ -24,13 +24,16 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    @Column
+    @Column(unique = true)
+    private String nickname;
+
+    @Column(unique = true)
     private String email;
 
     @Column
     private String password;
 
-    @Column
+    @Column(unique = true)
     private String tel;
 
     @Column

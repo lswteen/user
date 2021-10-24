@@ -12,6 +12,7 @@ import java.util.Date;
 public class UserResponse {
     private Long id;
     private String username;
+    private String nickname;
     private String email;
     private String tel;
     private String status;

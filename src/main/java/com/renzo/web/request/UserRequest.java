@@ -9,6 +9,7 @@ import java.util.Date;
 @Setter
 public class UserRequest {
     private String password;
+    private String nickname;
     private String username;
     private String email;
     private String tel;
