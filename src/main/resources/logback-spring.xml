@@ -58,7 +58,7 @@
     </appender>
 
     <springProfile name="local,docker,test">
-        <logger name="kr.co.greencar" level="DEBUG" />
+        <logger name="com.renzo" level="DEBUG" />
 
         <logger name="org.hibernate.SQL" level="DEBUG" />
         <logger name="org.hibernate.tool.hbm2ddl" level="DEBUG"/>
@@ -82,7 +82,7 @@
 
     <springProfile name="dev,qa,stage">
         <!-- 에러와 debug 로그 분리 출력 -->
-        <logger name="kr.co.greencar" level="DEBUG" additivity="false">
+        <logger name="com.renzo" level="DEBUG" additivity="false">
             <appender-ref ref="ASYNC" />
         </logger>
         <root level="ERROR">
