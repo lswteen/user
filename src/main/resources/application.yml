@@ -11,12 +11,12 @@ spring:
     time-zone: "Asia/Seoul"
   datasource:
     driverClassName: org.h2.Driver
-    jdbcUrl: jdbc:h2:~/test
+    jdbcUrl: jdbc:h2:file:~/h2db/test;MODE=MySql
     username: sa
     password:
     maximumPoolSize: 30
     minimumIdle: 5
-    poolName: dbgreencar
+    poolName: dbrenzo
     readOnly: false
 
   jpa:
