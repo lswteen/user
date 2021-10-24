@@ -1,0 +1,35 @@
+server:
+  port: 9030
+
+spring:
+  profiles:
+    active: local
+  application:
+    name: service-api
+    description: "serviec Service api"
+  jackson:
+    time-zone: "Asia/Seoul"
+  datasource:
+    driverClassName: org.h2.Driver
+    jdbcUrl: jdbc:h2:~/test
+    username: sa
+    password:
+    maximumPoolSize: 30
+    minimumIdle: 5
+    poolName: dbgreencar
+    readOnly: false
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: fase
+        use_sql_comments: true
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
