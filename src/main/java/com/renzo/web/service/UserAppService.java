@@ -12,34 +12,46 @@ public class UserAppService {
     @Autowired
     UserService userService;
 
+    public UserResponse emailLogin(String email, String password){
+        User user =userService.getByEmailAndPassword(email,password);
+        return UserResponse.builder()
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .phonenumber(user.getPhonenumber())
+                .regdt(user.getRegdt())
+                .build();
+    }
+
     public UserResponse getUserById(Long id){
         User user = userService.getById(id);
         return UserResponse.builder()
                 .id(user.getId())
-                .username(user.getUsername())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
                 .email(user.getEmail())
-                .tel(user.getTel())
-                .status(user.getStatus())
+                .phonenumber(user.getPhonenumber())
                 .regdt(user.getRegdt())
                 .build();
     }
 
     public UserResponse save(UserRequest request){
-        //FIXME : request 전달받아 처리필요함.
         User result = userService.save(User.builder()
-            .username("A001")
-            .email("a@gmail.com")
-            .password("abcde12345!")
-            .tel("010-3856-4215")
-            .status("001")
+            .firstname(request.getFirstname())
+            .lastname(request.getLastname())
+            .nickname(request.getNickname())
+            .email(request.getEmail())
+            .password(request.getPassword())
+            .phonenumber(request.getPhonenumber())
             .build());
 
         return UserResponse.builder()
              .id(result.getId())
-             .username(result.getUsername())
+             .firstname(result.getFirstname())
+             .lastname(result.getLastname())
              .email(result.getEmail())
-             .tel(result.getTel())
-             .status(result.getStatus())
+             .phonenumber(result.getPhonenumber())
              .regdt(result.getRegdt())
              .build();
 

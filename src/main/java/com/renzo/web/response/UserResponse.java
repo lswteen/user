@@ -11,10 +11,11 @@ import java.util.Date;
 @Getter
 public class UserResponse {
     private Long id;
-    private String username;
+    private String firstname;
+    private String lastname;
     private String nickname;
     private String email;
-    private String tel;
+    private String phonenumber;
     private String status;
     private Date regdt;
 }

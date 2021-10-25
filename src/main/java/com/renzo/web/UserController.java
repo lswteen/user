@@ -21,10 +21,11 @@ public class UserController {
      * @param request
      * @return
      */
-    @PostMapping("/users")
-    public UserResponse save(UserRequest request){
-        //FIXME : request 방어코딩 및 벨리데이션 체크 작업필요
-        return userAppService.save(request);
+    @PostMapping("/user")
+    public String signup(UserRequest request){
+        //request validation
+        userAppService.save(request);
+        return "redirect:/login";
     }
 
     /**
@@ -34,7 +35,9 @@ public class UserController {
      * 예) (아이디 혹인 전화번호) + 비밀번호 입력 하여 로그인 가능
      * @return
      */
-    public UserResponse login(){
+    @GetMapping("/login")
+    public UserResponse login(String email, String password){
+        userAppService.emailLogin(email,password);
         return null;
     }
 
@@ -59,9 +62,15 @@ public class UserController {
     }
 
 
-    @GetMapping("/save")
+    @GetMapping("/testsave")
     public UserResponse testSave(UserRequest request){
         //FIXME : request 방어코딩 및 벨리데이션 체크 작업필요
+        request.setEmail("renzo@gmail.com");
+        request.setNickname("renzo");
+        request.setPassword("qwer1234!");
+        request.setFirstname("순우");
+        request.setLastname("리");
+        request.setPhonenumber("01033334444");
         return userAppService.save(request);
     }
 
