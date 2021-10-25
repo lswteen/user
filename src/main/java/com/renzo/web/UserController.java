@@ -43,9 +43,11 @@ public class UserController {
     public String login(String arg, String password,String type){
         UserResponse userResponse = null;
         if(type.equals("email")){
-            userResponse =userAppService.emailLogin(arg,password);
+            userResponse = userAppService.emailLogin(arg, password);
         }else if(type.equals("phone")){
-            userResponse =userAppService.emailLogin(arg,password);
+            userResponse = userAppService.phoneLogin(arg, password);
+        }else if(type.equals("nickname")){
+            userResponse = userAppService.nicknameLogin(arg, password);
         }
         return jwtTokenProvider.createToken(userResponse.getUsername(),userResponse.getRoles());
     }

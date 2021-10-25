@@ -26,14 +26,22 @@ public class UserAppService {
     }
 
     public UserResponse emailLogin(String email, String password){
-        User user =userService.getByEmailAndPassword(email,password);
-        return userResponse(user);
+        return userResponse(userService.getByEmailAndPassword(email,password));
+    }
+
+    public UserResponse phoneLogin(String phone, String password){
+        return userResponse(userService.getByPhonenumberAndPassword(phone, password));
+    }
+
+    public UserResponse nicknameLogin(String nickname, String password){
+        return userResponse(userService.getByNicknameAndPassword(nickname, password));
     }
 
     public UserResponse getUserByEmail(String email){
-        User user = userService.getByEmail(email);
-        return userResponse(user);
+        return userResponse(userService.getByEmail(email));
     }
+
+
 
     public UserResponse getUserById(Long id){
         User user = userService.getById(id);
@@ -41,15 +49,14 @@ public class UserAppService {
     }
 
     public UserResponse save(UserRequest request){
-        User result = userService.save(User.builder()
-            .firstname(request.getFirstname())
-            .lastname(request.getLastname())
-            .nickname(request.getNickname())
-            .email(request.getEmail())
-            .password(request.getPassword())
-            .phonenumber(request.getPhonenumber())
-            .build());
-        return userResponse(result);
+        return userResponse(userService.save(User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .nickname(request.getNickname())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .phonenumber(request.getPhonenumber())
+                .build()));
     }
 
 

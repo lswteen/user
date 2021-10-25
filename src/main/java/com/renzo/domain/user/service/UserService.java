@@ -24,19 +24,19 @@ public class UserService {
                 .orElseThrow(()-> new ApiException(ServiceErrorType.NOT_FOUND));
     }
 
-    public User getByNickname(String nickname) {
-        return userRepository.findByNickname(nickname)
+    public User getByNicknameAndPassword(String nickname, String password) {
+        return userRepository.findByNicknameAndPassword(nickname, password)
                 .orElseThrow(() -> new ApiException(ServiceErrorType.NOT_FOUND));
+    }
+
+    public User getByPhonenumberAndPassword(String phonenumber, String password){
+        return userRepository.findByPhonenumberAndPassword(phonenumber, password)
+                .orElseThrow(()-> new ApiException(ServiceErrorType.NOT_FOUND));
     }
 
     public User getByEmail(String email) {
-        return userRepository.findByNickname(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(ServiceErrorType.NOT_FOUND));
-    }
-
-    public User getByPhonenumber(String phonenumber){
-        return userRepository.findByPhonenumber(phonenumber)
-                .orElseThrow(()-> new ApiException(ServiceErrorType.NOT_FOUND));
     }
 
     public void phoneNumberValidationCheck(String phonenumber){
