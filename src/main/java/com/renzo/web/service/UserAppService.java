@@ -12,28 +12,32 @@ public class UserAppService {
     @Autowired
     UserService userService;
 
-    public UserResponse emailLogin(String email, String password){
-        User user =userService.getByEmailAndPassword(email,password);
+    private UserResponse userResponse(User user) {
         return UserResponse.builder()
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
+                .username(user.getUsername())
                 .nickname(user.getNickname())
                 .email(user.getEmail())
                 .phonenumber(user.getPhonenumber())
+                .roles(user.getRoles())
                 .regdt(user.getRegdt())
                 .build();
     }
 
+    public UserResponse emailLogin(String email, String password){
+        User user =userService.getByEmailAndPassword(email,password);
+        return userResponse(user);
+    }
+
+    public UserResponse getUserByEmail(String email){
+        User user = userService.getByEmail(email);
+        return userResponse(user);
+    }
+
     public UserResponse getUserById(Long id){
         User user = userService.getById(id);
-        return UserResponse.builder()
-                .id(user.getId())
-                .firstname(user.getFirstname())
-                .lastname(user.getLastname())
-                .email(user.getEmail())
-                .phonenumber(user.getPhonenumber())
-                .regdt(user.getRegdt())
-                .build();
+        return userResponse(user);
     }
 
     public UserResponse save(UserRequest request){
@@ -45,15 +49,9 @@ public class UserAppService {
             .password(request.getPassword())
             .phonenumber(request.getPhonenumber())
             .build());
-
-        return UserResponse.builder()
-             .id(result.getId())
-             .firstname(result.getFirstname())
-             .lastname(result.getLastname())
-             .email(result.getEmail())
-             .phonenumber(result.getPhonenumber())
-             .regdt(result.getRegdt())
-             .build();
-
+        return userResponse(result);
     }
+
+
+
 }

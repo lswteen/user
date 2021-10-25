@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +33,8 @@ public class UserRequest {
     @NotBlank(message = "전화번호는 필수 입력 값입니다.")
     @Pattern(regexp = "[0-9]{10,11}", message = "10~11자리의 숫자만 입력가능합니다")
     private String phonenumber;
+
+    private List<String> roles;
 
 
 }
