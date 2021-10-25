@@ -28,11 +28,11 @@ import java.util.Properties;
         basePackages = {
                 "com.renzo.domain.**.repository"
         },
-        entityManagerFactoryRef = "renzoEntityManagerFactory",
-        transactionManagerRef = "renzoTransactionManager",
+        entityManagerFactoryRef = "userEntityManagerFactory",
+        transactionManagerRef = "userTransactionManager",
         repositoryFactoryBeanClass = EnversRevisionRepositoryFactoryBean.class
 )
-public class RenzoDataSourceConfig {
+public class UserDataSourceConfig {
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddlAuto;
 
@@ -50,14 +50,14 @@ public class RenzoDataSourceConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource renzoDataSource() {
+    public DataSource userDataSource() {
         return DataSourceBuilder.create()
                 .type(HikariDataSource.class)
                 .build();
     }
 
-    @Bean(name = "renzoEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean renzoEentityManagerFactory() {
+    @Bean(name = "userEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean userEentityManagerFactory() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(Boolean.TRUE);
 
@@ -65,20 +65,20 @@ public class RenzoDataSourceConfig {
 
         entityManagerFactoryBean.setPersistenceProvider(new HibernatePersistenceProvider());
         entityManagerFactoryBean.setPackagesToScan("com.renzo.domain.**.entity");
-        entityManagerFactoryBean.setDataSource(renzoDataSource());
+        entityManagerFactoryBean.setDataSource(userDataSource());
         entityManagerFactoryBean.setJpaProperties(hibernateProperties());
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
-        entityManagerFactoryBean.setPersistenceUnitName("renzoEntityManagerUnit");
+        entityManagerFactoryBean.setPersistenceUnitName("userEntityManagerUnit");
         entityManagerFactoryBean.afterPropertiesSet();
 
         return entityManagerFactoryBean;
     }
 
-    @Bean(name = "renzoTransactionManager")
-    public PlatformTransactionManager renzoTransactionManager(
-            @Qualifier("renzoEntityManagerFactory") EntityManagerFactory renzoEntityManagerFactory) {
+    @Bean(name = "userTransactionManager")
+    public PlatformTransactionManager userTransactionManager(
+            @Qualifier("userEntityManagerFactory") EntityManagerFactory userEntityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(renzoEntityManagerFactory);
+        transactionManager.setEntityManagerFactory(userEntityManagerFactory);
 
         return transactionManager;
     }

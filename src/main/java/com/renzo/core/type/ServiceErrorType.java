@@ -9,7 +9,7 @@ public enum ServiceErrorType {
     NOT_FOUND(HttpStatus.NOT_FOUND, 1, "해당 리소스를 찾을 수 없습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 1, "시스템에 문제가 발생하였습니다."),
     INVALID_PARAMETER(HttpStatus.CONFLICT, 1, "유효하지 않은 전달값입니다."),
-
+    DUPLICATE(HttpStatus.CONFLICT, 1, "이미 등록 되었습니다.")
     ;
 
     HttpStatus httpStatus;
