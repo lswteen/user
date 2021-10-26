@@ -14,28 +14,28 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User getById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ApiException(ServiceErrorType.NOT_FOUND));
-    }
+//    public User getById(Long id) {
+//        return userRepository.findById(id)
+//                .orElseThrow(() -> new ApiException(ServiceErrorType.NOT_FOUND));
+//    }
 
     public User getByEmailAndPassword(String email, String password){
         return userRepository.findByEmailAndPassword(email,password)
                 .orElseThrow(()-> new ApiException(ServiceErrorType.NOT_FOUND));
     }
 
-    public User getByNicknameAndPassword(String nickname, String password) {
-        return userRepository.findByNicknameAndPassword(nickname, password)
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(ServiceErrorType.NOT_FOUND));
     }
 
-    public User getByPhonenumberAndPassword(String phonenumber, String password){
-        return userRepository.findByPhonenumberAndPassword(phonenumber, password)
-                .orElseThrow(()-> new ApiException(ServiceErrorType.NOT_FOUND));
+    public User getByPhonenumber(String phonenumber) {
+        return userRepository.findByPhonenumber(phonenumber)
+                .orElseThrow(() -> new ApiException(ServiceErrorType.NOT_FOUND));
     }
 
-    public User getByEmail(String email) {
-        return userRepository.findByEmail(email)
+    public User getByNickname(String nickname) {
+        return userRepository.findByPhonenumber(nickname)
                 .orElseThrow(() -> new ApiException(ServiceErrorType.NOT_FOUND));
     }
 
@@ -61,10 +61,5 @@ public class UserService {
     public User save(User user) {
         return userRepository.save(user);
     }
-
-    public User update(User user){
-        return userRepository.save(user);
-    }
-
 
 }

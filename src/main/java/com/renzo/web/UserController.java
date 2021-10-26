@@ -47,7 +47,7 @@ public class UserController {
      * 예) (아이디 혹인 전화번호) + 비밀번호 입력 하여 로그인 가능
      * @return
      */
-    @GetMapping("/login")
+    @GetMapping("/user/login")
     public String login(String arg, String password,String type){
         UserResponse userResponse = null;
         if(type.equals("email")){
@@ -57,7 +57,6 @@ public class UserController {
         }else if(type.equals("nickname")){
             userResponse = userAppService.nicknameLogin(arg, password);
         }
-
         return jwtTokenProvider.createToken(userResponse.getUsername(),userResponse.getRoles());
     }
 
@@ -65,7 +64,7 @@ public class UserController {
      * 내정보 보기
      * @return
      */
-    @GetMapping("/me")
+    @GetMapping("/user/me")
     public UserResponse getMe(){
         return userAppService.getUserByEmail(SecurityContextHolder
                 .getContext()
@@ -79,7 +78,7 @@ public class UserController {
      * 전화번호 인증 후 비밀번호 재설정이 가능해야함
      * @return
      */
-    @PutMapping("/password")
+    @PutMapping("/user/password")
     public UserResponse updatePassword(){
         return null;
     }
@@ -130,6 +129,11 @@ public class UserController {
         roles.add("USER");
         request.setRoles(roles);
         return userAppService.save(request);
+    }
+
+    @GetMapping("/user")
+    public UserResponse getEmail(String email){
+        return userAppService.getUserByEmail(email);
     }
 
 }
