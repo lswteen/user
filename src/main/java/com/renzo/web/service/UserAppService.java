@@ -41,11 +41,11 @@ public class UserAppService {
         return userResponse(userService.getByEmail(email));
     }
 
+    public UserResponse changePassword(String phonenumber, String password){
+        //패스워드 동일한지 체크 귀찮다.
+        //패스워드가 다르면 변경 후 유저정보 리턴
 
-
-    public UserResponse getUserById(Long id){
-        User user = userService.getById(id);
-        return userResponse(user);
+        return null;
     }
 
     public UserResponse save(UserRequest request){
@@ -55,6 +55,7 @@ public class UserAppService {
                 .nickname(request.getNickname())
                 .email(request.getEmail())
                 .password(request.getPassword())
+                .roles(request.getRoles())
                 .phonenumber(request.getPhonenumber())
                 .build()));
     }

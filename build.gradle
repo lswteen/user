@@ -25,11 +25,12 @@ dependencies {
 	implementation 'org.springframework.data:spring-data-envers'
 	implementation 'org.springframework.boot:spring-boot-configuration-processor'
 
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	compile("com.querydsl:querydsl-apt:4.4.0")
 	compile("com.querydsl:querydsl-sql:4.4.0")
 	compile("com.querydsl:querydsl-sql-spring:4.4.0")
 	compile("com.querydsl:querydsl-jpa:4.4.0")
-
 	runtimeOnly 'mysql:mysql-connector-java'
 	implementation('com.h2database:h2:1.4.196')
 

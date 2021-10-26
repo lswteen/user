@@ -1,7 +1,6 @@
 package com.renzo.web.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -36,5 +35,18 @@ public class UserRequest {
 
     private List<String> roles;
 
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SmsCertificationRequest {
 
+        private String phone;
+        private String certificationNumber;
+
+        @Builder
+        public SmsCertificationRequest(String phone, String certificationNumber) {
+            this.phone = phone;
+            this.certificationNumber = certificationNumber;
+        }
+
+    }
 }

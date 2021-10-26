@@ -3,13 +3,18 @@ package com.renzo.web;
 import com.renzo.config.security.JwtTokenProvider;
 import com.renzo.web.request.UserRequest;
 import com.renzo.web.response.UserResponse;
+import com.renzo.web.service.SmsCertificationService;
 import com.renzo.web.service.UserAppService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.renzo.web.response.ResponseConstants.CREATED;
+import static com.renzo.web.response.ResponseConstants.OK;
 
 @Slf4j
 @RequestMapping("/api")
@@ -20,6 +25,9 @@ public class UserController {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private SmsCertificationService smsCertificationService;
 
     /**
      * 회원 가입
@@ -49,6 +57,7 @@ public class UserController {
         }else if(type.equals("nickname")){
             userResponse = userAppService.nicknameLogin(arg, password);
         }
+
         return jwtTokenProvider.createToken(userResponse.getUsername(),userResponse.getRoles());
     }
 
@@ -70,14 +79,42 @@ public class UserController {
      * 전화번호 인증 후 비밀번호 재설정이 가능해야함
      * @return
      */
-    @GetMapping("/find/password")
-    public UserResponse getByPassword(){
-        return null;
-    }
-
     @PutMapping("/password")
     public UserResponse updatePassword(){
         return null;
+    }
+
+    /**
+     * 인증번호 발송
+     * @param requestDto
+     * @return
+     */
+    @PostMapping("/sms/certification/sends")
+    public ResponseEntity<Void> sendSms(@RequestBody UserRequest.SmsCertificationRequest requestDto) {
+        smsCertificationService.sendSms(requestDto.getPhone());
+        return CREATED;
+    }
+
+    /**
+     * 인증번호 확인
+     * @param requestDto
+     * @return
+     */
+    @PostMapping("/sms/certification/confirms")
+    public ResponseEntity<Void> SmsVerification(@RequestBody UserRequest.SmsCertificationRequest requestDto) {
+        smsCertificationService.verifySms(requestDto);
+        return OK;
+    }
+
+    /**
+     * 인증 검증
+     * @param requestDto
+     * @return
+     */
+    @PostMapping("/sms/certification/verify")
+    public ResponseEntity<Void> isSMSVerification(@RequestBody UserRequest.SmsCertificationRequest requestDto){
+        smsCertificationService.isVerify(requestDto);
+        return OK;
     }
 
     @GetMapping("/testsave")

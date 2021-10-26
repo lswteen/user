@@ -1,4 +1,4 @@
-package com.renzo.config;
+package com.renzo.config.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
