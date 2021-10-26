@@ -73,13 +73,15 @@ public class UserController {
     }
 
     /**
+     * Finding a password reset.
      * 비밀번호 찾기 (재설정)기능
      * 로그인 되어있지 않은 상태에서 비밀번호 재설정 하는기능
      * 전화번호 인증 후 비밀번호 재설정이 가능해야함
      * @return
      */
     @PutMapping("/user/password")
-    public UserResponse updatePassword(){
+    public UserResponse findByPasswordAndReset(String phonenumber, String newPassword){
+        userAppService.findByPasswordAndReset(phonenumber,newPassword);
         return null;
     }
 

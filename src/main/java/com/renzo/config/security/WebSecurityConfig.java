@@ -51,7 +51,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .authorizeRequests()
                 .antMatchers("/api/user/me").hasRole("USER")
-                .antMatchers("/api/user/password").hasRole("USER")
                 .anyRequest()
                 .permitAll()
                 .and()

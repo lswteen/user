@@ -64,10 +64,17 @@ public class UserAppService {
         return userResponse(userService.getByEmail(email));
     }
 
-    public UserResponse changePassword(String phonenumber, String password){
-        //패스워드 동일한지 체크 귀찮다.
-        //패스워드가 다르면 변경 후 유저정보 리턴
-        return null;
+    public UserResponse findByPasswordAndReset(String phonenumber, String newPassword){
+        User user = userService.getByPhonenumber(phonenumber);
+        if(bCryptPasswordEncoder.matches(newPassword,user.getPassword())){  //중복이면 다른걸로 넣어달라는 리턴
+            throw new ApiException(ServiceErrorType.OLDPASSWORD);
+        }else{
+            user = userService.save(User.builder()
+                    .id(user.getId())
+                    .password(new BCryptPasswordEncoder().encode(newPassword))
+                    .build());
+            return userResponse(user);
+        }
     }
 
     public UserResponse save(UserRequest request){
