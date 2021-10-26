@@ -1,20 +1,33 @@
 package com.renzo.web;
 
+import com.renzo.config.security.JwtTokenProvider;
 import com.renzo.web.request.UserRequest;
 import com.renzo.web.response.UserResponse;
+import com.renzo.web.service.SmsCertificationService;
 import com.renzo.web.service.UserAppService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.renzo.web.response.ResponseConstants.CREATED;
+import static com.renzo.web.response.ResponseConstants.OK;
 
 @Slf4j
+@RequestMapping("/api")
 @RestController
 public class UserController {
     @Autowired
     private UserAppService userAppService;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private SmsCertificationService smsCertificationService;
 
     /**
      * 회원 가입
@@ -23,7 +36,6 @@ public class UserController {
      */
     @PostMapping("/user")
     public String signup(UserRequest request){
-        //request validation
         userAppService.save(request);
         return "redirect:/login";
     }
@@ -36,19 +48,29 @@ public class UserController {
      * @return
      */
     @GetMapping("/login")
-    public UserResponse login(String email, String password){
-        userAppService.emailLogin(email,password);
-        return null;
+    public String login(String arg, String password,String type){
+        UserResponse userResponse = null;
+        if(type.equals("email")){
+            userResponse = userAppService.emailLogin(arg, password);
+        }else if(type.equals("phone")){
+            userResponse = userAppService.phoneLogin(arg, password);
+        }else if(type.equals("nickname")){
+            userResponse = userAppService.nicknameLogin(arg, password);
+        }
+
+        return jwtTokenProvider.createToken(userResponse.getUsername(),userResponse.getRoles());
     }
 
     /**
      * 내정보 보기
-     * @param id
      * @return
      */
-    @GetMapping("/users")
-    public UserResponse getById(@RequestParam long id){
-        return userAppService.getUserById(id);
+    @GetMapping("/me")
+    public UserResponse getMe(){
+        return userAppService.getUserByEmail(SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName());
     }
 
     /**
@@ -57,10 +79,43 @@ public class UserController {
      * 전화번호 인증 후 비밀번호 재설정이 가능해야함
      * @return
      */
-    public UserResponse getByPassword(){
+    @PutMapping("/password")
+    public UserResponse updatePassword(){
         return null;
     }
 
+    /**
+     * 인증번호 발송
+     * @param requestDto
+     * @return
+     */
+    @PostMapping("/sms/certification/sends")
+    public ResponseEntity<Void> sendSms(@RequestBody UserRequest.SmsCertificationRequest requestDto) {
+        smsCertificationService.sendSms(requestDto.getPhone());
+        return CREATED;
+    }
+
+    /**
+     * 인증번호 확인
+     * @param requestDto
+     * @return
+     */
+    @PostMapping("/sms/certification/confirms")
+    public ResponseEntity<Void> SmsVerification(@RequestBody UserRequest.SmsCertificationRequest requestDto) {
+        smsCertificationService.verifySms(requestDto);
+        return OK;
+    }
+
+    /**
+     * 인증 검증
+     * @param requestDto
+     * @return
+     */
+    @PostMapping("/sms/certification/verify")
+    public ResponseEntity<Void> isSMSVerification(@RequestBody UserRequest.SmsCertificationRequest requestDto){
+        smsCertificationService.isVerify(requestDto);
+        return OK;
+    }
 
     @GetMapping("/testsave")
     public UserResponse testSave(UserRequest request){
@@ -71,6 +126,9 @@ public class UserController {
         request.setFirstname("순우");
         request.setLastname("리");
         request.setPhonenumber("01033334444");
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+        request.setRoles(roles);
         return userAppService.save(request);
     }
 
