@@ -17,9 +17,6 @@ public class UserAppService {
     @Autowired
     UserService userService;
 
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private UserResponse userResponse(User user) {
         return UserResponse.builder()
                 .firstname(user.getFirstname())
@@ -33,9 +30,13 @@ public class UserAppService {
                 .build();
     }
 
+    private BCryptPasswordEncoder newInstancebCryptPasswordEncoder(){
+       return new BCryptPasswordEncoder();
+    }
+
     public UserResponse emailLogin(String email, String password){
         User user = userService.getByEmail(email);
-        if(bCryptPasswordEncoder.matches(password,user.getPassword())){
+        if(newInstancebCryptPasswordEncoder().matches(password,user.getPassword())){
             return userResponse(user);
         }else{
             throw new ApiException(ServiceErrorType.INVALID_PARAMETER);
@@ -44,7 +45,7 @@ public class UserAppService {
 
     public UserResponse phoneLogin(String phonenumber, String password){
         User user = userService.getByPhonenumber(phonenumber);
-        if(bCryptPasswordEncoder.matches(password,user.getPassword())){
+        if(newInstancebCryptPasswordEncoder().matches(password,user.getPassword())){
             return userResponse(user);
         }else{
             throw new ApiException(ServiceErrorType.INVALID_PARAMETER);
@@ -53,7 +54,7 @@ public class UserAppService {
 
     public UserResponse nicknameLogin(String nickname, String password){
         User user = userService.getByNickname(nickname);
-        if(bCryptPasswordEncoder.matches(password,user.getPassword())){
+        if(newInstancebCryptPasswordEncoder().matches(password,user.getPassword())){
             return userResponse(user);
         }else{
             throw new ApiException(ServiceErrorType.INVALID_PARAMETER);
@@ -66,14 +67,13 @@ public class UserAppService {
 
     public UserResponse findByPasswordAndReset(String phonenumber, String newPassword){
         User user = userService.getByPhonenumber(phonenumber);
-        if(bCryptPasswordEncoder.matches(newPassword,user.getPassword())){  //중복이면 다른걸로 넣어달라는 리턴
+        if(newInstancebCryptPasswordEncoder().matches(newPassword,user.getPassword())){  //중복이면 다른걸로 넣어달라는 리턴
             throw new ApiException(ServiceErrorType.OLDPASSWORD);
         }else{
-            user = userService.save(User.builder()
+            return userResponse(userService.save(User.builder()
                     .id(user.getId())
                     .password(new BCryptPasswordEncoder().encode(newPassword))
-                    .build());
-            return userResponse(user);
+                    .build()));
         }
     }
 

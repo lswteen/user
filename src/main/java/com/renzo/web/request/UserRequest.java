@@ -7,6 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class UserRequest {
 
     private String password;
@@ -22,6 +23,8 @@ public class UserRequest {
     private String phonenumber;
 
     private List<String> roles;
+
+
 
     public User toEntity(){
         return User.builder()

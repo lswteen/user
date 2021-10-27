@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static com.renzo.web.response.ResponseConstants.CREATED;
 import static com.renzo.web.response.ResponseConstants.OK;
@@ -107,16 +109,7 @@ public class UserController {
         return OK;
     }
 
-    /**
-     * 인증 검증
-     * @param requestDto
-     * @return
-     */
-    @PostMapping("/sms/certification/verify")
-    public ResponseEntity<Void> isSMSVerification(@RequestBody UserRequest.SmsCertificationRequest requestDto){
-        smsCertificationService.isVerify(requestDto);
-        return OK;
-    }
+    //----------------------------- 절대 ... 이렇게 안하는데 H2 가 아직 익숙하질 않다보니 죄송합니다... ㅜ.ㅜ -----//
 
     @GetMapping("/testsave")
     public UserResponse testSave(UserRequest request){
@@ -137,5 +130,5 @@ public class UserController {
     public UserResponse getEmail(String email){
         return userAppService.getUserByEmail(email);
     }
-
+    //----------------------------- 보통 이렇게 안하는데 H2 가 아직 익숙하질 않다보니 죄송합니다... ㅜ.ㅜ-----//
 }

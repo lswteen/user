@@ -14,11 +14,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-//    public User getById(Long id) {
-//        return userRepository.findById(id)
-//                .orElseThrow(() -> new ApiException(ServiceErrorType.NOT_FOUND));
-//    }
-
     public User getByEmailAndPassword(String email, String password){
         return userRepository.findByEmailAndPassword(email,password)
                 .orElseThrow(()-> new ApiException(ServiceErrorType.NOT_FOUND));
@@ -35,7 +30,7 @@ public class UserService {
     }
 
     public User getByNickname(String nickname) {
-        return userRepository.findByPhonenumber(nickname)
+        return userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new ApiException(ServiceErrorType.NOT_FOUND));
     }
 
