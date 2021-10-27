@@ -4,14 +4,19 @@ server:
 spring:
   profiles:
     active: local
+
   application:
-    name: service-api
-    description: "serviec Service api"
+    name: user-service-api
+    description: "SpringBoot JPA H2 Redis JWT Security User Service Api"
+
   jackson:
     time-zone: "Asia/Seoul"
+
   datasource:
     driverClassName: org.h2.Driver
-    jdbcUrl: jdbc:h2:file:~/h2db/test;MODE=MySql
+    #    jdbcUrl: jdbc:h2:file:~/h2db/test;MODE=MySql
+    jdbcUrl: jdbc:h2:mem:test;MODE=MySql
+
     username: sa
     password:
     maximumPoolSize: 30
@@ -33,3 +38,7 @@ spring:
     console:
       path: /h2-console
       enabled: true
+
+  redis:
+    host: 127.0.0.1
+    port: 6379

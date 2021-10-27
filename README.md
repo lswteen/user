@@ -2,6 +2,22 @@
 
 > Spring Boot기반으로 기본적인 설정을 자동화하고 JPA를 통해 Domain Model의 영속화(Persistence)에 대한 코딩 및 오류를 줄입니다.
 
+## Redis 설치
+AWS 서버 또는 docker를 하는게 좋을것 같지만 .
+mac은 brew를 이용하여 쉽게 설치할 수 있습니다.
+
+$ brew install redis
+위의 명령어를 통해 Redis를 설치합니다. (다소 시간이 걸립니다)
+
+$ brew services start redis
+
+$ brew services stop redis
+$ brew services restart redis
+brew services start 명령어를 통해 Redis를 실행시켜 줍니다.
+
+$ redis-cli
+위의 명령어를 통해 CLI를 사용할 수 있습니다.
+
 ## Features
 - **[Spring Boot](https://start.spring.io/)**: springboot 기본 생성
 - **[아키텍처]**: DDD 구조 설계 및 Core 작업 추후 점진적인 MSA 멀티모듈 가능성을위한 분리 

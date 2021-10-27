@@ -13,18 +13,20 @@ import java.util.Date;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
+    private static final String DATE_FORMAT ="yyyy-MM-dd HH:mm:ss";
+    private static final String TIME_ZONE ="Asia/Seoul";
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT,
+            timezone = TIME_ZONE)
     @Column(name = "regdt", updatable = false)
     private Date regdt;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT,
+            timezone = TIME_ZONE)
     @Column(name = "moddt", updatable = true)
     private Date moddt;
 }
