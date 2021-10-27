@@ -32,7 +32,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @PostMapping("/singup")
+    @PostMapping("/user/singup")
     public String signup(UserRequest request){
         userAppService.save(request);
         return "redirect:/login";
