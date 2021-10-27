@@ -2,18 +2,17 @@ package com.renzo.config.security;
 
 import com.renzo.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * UserDetails 를 받아서 권한을 처리해야한다면

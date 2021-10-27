@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 @Setter
 //@EqualsAndHashCode(of = "id")
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
-//@NoArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
     @Id
@@ -53,14 +53,6 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-    }
-
-    protected User(){}
-
-    public User(String email, String password, List<String> roles) {
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
     }
 
     @Override

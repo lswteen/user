@@ -1,16 +1,22 @@
 package com.renzo.web.service;
 
+import com.renzo.core.exception.ApiException;
+import com.renzo.core.type.ServiceErrorType;
 import com.renzo.domain.user.entity.User;
 import com.renzo.domain.user.service.UserService;
 import com.renzo.web.request.UserRequest;
 import com.renzo.web.response.UserResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserAppService {
-    @Autowired
-    UserService userService;
+
+    private final UserService userService;
 
     private UserResponse userResponse(User user) {
         return UserResponse.builder()
@@ -25,41 +31,57 @@ public class UserAppService {
                 .build();
     }
 
-    public UserResponse emailLogin(String email, String password){
-        return userResponse(userService.getByEmailAndPassword(email,password));
+    private BCryptPasswordEncoder newInstancebCryptPasswordEncoder(){
+       return new BCryptPasswordEncoder();
     }
 
-    public UserResponse phoneLogin(String phone, String password){
-        return userResponse(userService.getByPhonenumberAndPassword(phone, password));
+    public UserResponse emailLogin(String email, String password){
+        User user = userService.getByEmail(email);
+        if(newInstancebCryptPasswordEncoder().matches(password,user.getPassword())){
+            return userResponse(user);
+        }else{
+            throw new ApiException(ServiceErrorType.INVALID_PARAMETER);
+        }
+    }
+
+    public UserResponse phoneLogin(String phonenumber, String password){
+        User user = userService.getByPhonenumber(phonenumber);
+        if(newInstancebCryptPasswordEncoder().matches(password,user.getPassword())){
+            return userResponse(user);
+        }else{
+            throw new ApiException(ServiceErrorType.INVALID_PARAMETER);
+        }
     }
 
     public UserResponse nicknameLogin(String nickname, String password){
-        return userResponse(userService.getByNicknameAndPassword(nickname, password));
+        User user = userService.getByNickname(nickname);
+        if(newInstancebCryptPasswordEncoder().matches(password,user.getPassword())){
+            return userResponse(user);
+        }else{
+            throw new ApiException(ServiceErrorType.INVALID_PARAMETER);
+        }
     }
 
     public UserResponse getUserByEmail(String email){
         return userResponse(userService.getByEmail(email));
     }
 
-    public UserResponse changePassword(String phonenumber, String password){
-        //패스워드 동일한지 체크 귀찮다.
-        //패스워드가 다르면 변경 후 유저정보 리턴
-
-        return null;
+    public UserResponse findByPasswordAndReset(String phonenumber, String newPassword){
+        User user = userService.getByPhonenumber(phonenumber);
+        if(newInstancebCryptPasswordEncoder().matches(newPassword,user.getPassword())){  //중복이면 다른걸로 넣어달라는 리턴
+            throw new ApiException(ServiceErrorType.OLDPASSWORD);
+        }else{
+            return userResponse(userService.save(User.builder()
+                    .id(user.getId())
+                    .password(new BCryptPasswordEncoder().encode(newPassword))
+                    .build()));
+        }
     }
 
     public UserResponse save(UserRequest request){
-        return userResponse(userService.save(User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .nickname(request.getNickname())
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .roles(request.getRoles())
-                .phonenumber(request.getPhonenumber())
-                .build()));
+        userService.phoneNumberValidationCheck(request.getPhonenumber());
+        userService.emailValidationCheck(request.getEmail());
+        userService.nicknameValidatoinCheck(request.getNickname());
+        return userResponse(userService.save(request.toEntity()));
     }
-
-
-
 }

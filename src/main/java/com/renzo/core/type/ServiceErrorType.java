@@ -10,6 +10,8 @@ public enum ServiceErrorType {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 1, "시스템에 문제가 발생하였습니다."),
     INVALID_PARAMETER(HttpStatus.CONFLICT, 1, "유효하지 않은 전달값입니다."),
     DUPLICATE(HttpStatus.CONFLICT, 1, "이미 등록 되었습니다."),
+    DUPLICATE_USER(HttpStatus.CONFLICT, 1, "이미 가입되어 있는 유저입니다."),
+    OLDPASSWORD(HttpStatus.CONFLICT, 1, "이전 패스워드 입니다. 변경해주시기 바랍니다."),
     MISMATCH(HttpStatus.CONFLICT, 1, "인증번호가 일치하지 않습니다.")
     ;
 

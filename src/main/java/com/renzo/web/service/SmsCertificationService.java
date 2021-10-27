@@ -38,7 +38,7 @@ public class SmsCertificationService {
 
     // sms로 인증번호 발송하고, 발송 정보를 세션에 저장
     public void sendSms(String phone) {
-        //FIXME : 여기에 SMS문자발송이 들어가야하지만 요청과제예기해주신대로 스킵하겠습니다.!!
+        //FIXME : 여기에 SMS문자발송이 들어가야하지만 스킵하겠습니다.
         String randomNumber = makeRandomNumber();
         String content = makeSmsContent(randomNumber);
         HashMap<String, String> params = makeParams(phone, content);
@@ -53,9 +53,9 @@ public class SmsCertificationService {
         smsCertificationDao.removeSmsCertification(requestDto.getPhone());
     }
 
-    public boolean isVerify(UserRequest.SmsCertificationRequest requestDto) {
+    private boolean isVerify(UserRequest.SmsCertificationRequest requestDto) {
         return !(smsCertificationDao.hasKey(requestDto.getPhone()) &&
                 smsCertificationDao.getSmsCertification(requestDto.getPhone())
-                        .equals(requestDto.getCertificationNumber()));
+                .equals(requestDto.getCertificationNumber()));
     }
 }
