@@ -6,16 +6,17 @@ import com.renzo.domain.user.entity.User;
 import com.renzo.domain.user.service.UserService;
 import com.renzo.web.request.UserRequest;
 import com.renzo.web.response.UserResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserAppService {
-    @Autowired
-    UserService userService;
+
+    private final UserService userService;
 
     private UserResponse userResponse(User user) {
         return UserResponse.builder()

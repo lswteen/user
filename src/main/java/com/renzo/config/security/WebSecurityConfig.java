@@ -3,7 +3,6 @@ package com.renzo.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Slf4j
 @EnableWebSecurity
@@ -22,18 +20,10 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider jwtTokenProvider;
 
-    /**
-     * FIXME: 패스워드까지 암호화하고싶은마음으로 미리 만들어봅니다.
-     * 회원 서비스 거의 ...7년만에 개발이라 쉽지 않네요!!
-     * 5일을 버닝했다는것만 꼭 기억해주시기 바랍니다.!!
-     *
-     * @return
-     */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     @Override
@@ -48,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable()
-                .httpBasic().disable()
+                //.httpBasic().disable()
                 .authorizeRequests()
                 .antMatchers("/api/user/me").hasRole("USER")
                 .anyRequest()

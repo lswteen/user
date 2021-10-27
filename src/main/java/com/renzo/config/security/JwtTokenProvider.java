@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +23,12 @@ import java.util.List;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
     private String secretKey = "svsk";
     private long tokenValidTime = 30 * 60 * 1000L;    // 토큰 유효시간 30분
-    private final UserDetailsService userDetailsService;
 
-    public JwtTokenProvider(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    private final UserDetailsService userDetailsService;
 
     // 객체 초기화, secretKey를 Base64로 인코딩한다.
     @PostConstruct

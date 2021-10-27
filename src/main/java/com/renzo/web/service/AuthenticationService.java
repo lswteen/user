@@ -4,14 +4,14 @@ import com.renzo.core.exception.ApiException;
 import com.renzo.core.type.ServiceErrorType;
 import com.renzo.domain.user.entity.User;
 import com.renzo.domain.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationService {
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
     public User anthenticate(String token){
         try {

@@ -5,15 +5,15 @@ import com.renzo.web.request.UserRequest;
 import com.renzo.web.response.UserResponse;
 import com.renzo.web.service.SmsCertificationService;
 import com.renzo.web.service.UserAppService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
 
 import static com.renzo.web.response.ResponseConstants.CREATED;
 import static com.renzo.web.response.ResponseConstants.OK;
@@ -21,22 +21,18 @@ import static com.renzo.web.response.ResponseConstants.OK;
 @Slf4j
 @RequestMapping("/api")
 @RestController
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserAppService userAppService;
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    private SmsCertificationService smsCertificationService;
+    private final UserAppService userAppService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final SmsCertificationService smsCertificationService;
 
     /**
      * 회원 가입
      * @param request
      * @return
      */
-    @PostMapping("/user")
+    @PostMapping("/singup")
     public String signup(UserRequest request){
         userAppService.save(request);
         return "redirect:/login";
@@ -49,15 +45,15 @@ public class UserController {
      * 예) (아이디 혹인 전화번호) + 비밀번호 입력 하여 로그인 가능
      * @return
      */
-    @GetMapping("/user/login")
-    public String login(String arg, String password,String type){
+    @PostMapping("/user/login")
+    public String login(@RequestBody UserRequest.LoginRequest loginRequest){
         UserResponse userResponse = null;
-        if(type.equals("email")){
-            userResponse = userAppService.emailLogin(arg, password);
-        }else if(type.equals("phone")){
-            userResponse = userAppService.phoneLogin(arg, password);
-        }else if(type.equals("nickname")){
-            userResponse = userAppService.nicknameLogin(arg, password);
+        if(loginRequest.getType().equals("email")){
+            userResponse = userAppService.emailLogin(loginRequest.getArgument(), loginRequest.getPassword());
+        }else if(loginRequest.getType().equals("phone")){
+            userResponse = userAppService.phoneLogin(loginRequest.getArgument(), loginRequest.getPassword());
+        }else if(loginRequest.getType().equals("nickname")){
+            userResponse = userAppService.nicknameLogin(loginRequest.getArgument(), loginRequest.getPassword());
         }
         return jwtTokenProvider.createToken(userResponse.getUsername(),userResponse.getRoles());
     }
@@ -66,12 +62,10 @@ public class UserController {
      * 내정보 보기
      * @return
      */
-    @GetMapping("/user/me")
+    @PostMapping("/user/me")
     public UserResponse getMe(){
-        return userAppService.getUserByEmail(SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userAppService.getUserByEmail(authentication.getName());
     }
 
     /**
