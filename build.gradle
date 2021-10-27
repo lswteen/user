@@ -1,25 +1,12 @@
 plugins {
 	id 'org.springframework.boot' version '2.5.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id "org.asciidoctor.jvm.convert" version "3.3.2"
 	id 'java'
 }
 
 group = 'com.renzo'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-
-ext {
-	snippetsDir = file('build/generated-snippets')
-}
-
-bootJar {
-	dependsOn asciidoctor
-	copy {
-		from "${asciidoctor.outputDir}"
-		into 'BOOT-INF/classes/static/docs'
-	}
-}
 
 repositories {
 	mavenCentral()
@@ -53,9 +40,11 @@ dependencies {
 
 	compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
 
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
 	// JUnit4
 	testImplementation('org.junit.vintage:junit-vintage-engine') {
@@ -100,28 +89,4 @@ compileJava.finalizedBy(cleanUpQueryDsl)
 clean {
 	delete gradleQueryDslOutput
 	delete queryDslOutput
-}
-
-test {
-	useJUnitPlatform()
-	outputs.dir snippetsDir
-}
-
-asciidoctor {
-	dependsOn test
-	inputs.dir snippetsDir
-}
-
-asciidoctor.doFirst {
-	delete file('src/main/resources/static/docs')
-}
-
-task copyDocument(type: Copy) {
-	dependsOn asciidoctor
-	from file("build/docs/asciidoc")
-	into file("src/main/resources/static/docs")
-}
-
-build {
-	dependsOn copyDocument
 }
