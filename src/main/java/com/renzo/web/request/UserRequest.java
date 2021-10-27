@@ -8,8 +8,8 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 public class UserRequest {
-
     private String password;
 
     private String nickname;
@@ -23,7 +23,6 @@ public class UserRequest {
     private String phonenumber;
 
     private List<String> roles;
-
 
 
     public User toEntity(){
@@ -50,6 +49,21 @@ public class UserRequest {
             this.phone = phone;
             this.certificationNumber = certificationNumber;
         }
+    }
 
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class LoginRequest {
+
+        private String argument;
+        private String password;
+        private String type;
+
+        @Builder
+        public LoginRequest(String argument, String password, String type) {
+            this.argument = argument;
+            this.password = password;
+            this.type = type;
+        }
     }
 }
