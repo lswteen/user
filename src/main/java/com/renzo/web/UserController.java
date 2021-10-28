@@ -75,9 +75,9 @@ public class UserController {
      */
     @ApiOperation(value = "비밀번호 찾기 (재설정)기능", notes = "비밀번호 찾기 (재설정)기능", tags = "회원")
     @PutMapping("/user/password")
-    public UserResponse findByPasswordAndReset(String phonenumber, String newPassword){
+    public ResponseEntity<Void> findByPasswordAndReset(String phonenumber, String newPassword){
         userAppService.findByPasswordAndReset(phonenumber,newPassword);
-        return null;
+        return OK;
     }
 
     /**
@@ -102,25 +102,6 @@ public class UserController {
     public ResponseEntity<Void> SmsVerification(@RequestBody UserRequest.SmsCertificationRequest requestDto) {
         smsCertificationService.verifySms(requestDto);
         return OK;
-    }
-
-    /**
-     * 회원가입 테스트용
-     * @param request
-     * @return
-     */
-    @GetMapping("/testsave")
-    public UserResponse testSave(UserRequest request){
-        request.setEmail("renzo@gmail.com");
-        request.setNickname("renzo");
-        request.setPassword("qwer1234!");
-        request.setFirstname("순우");
-        request.setLastname("리");
-        request.setPhonenumber("01033334444");
-        List<String> roles = new ArrayList<>();
-        roles.add("USER");
-        request.setRoles(roles);
-        return userAppService.save(request);
     }
 
 }

@@ -73,7 +73,7 @@ public class UserAppService {
         }else{
             return userResponse(userService.save(User.builder()
                     .id(user.getId())
-                    .password(new BCryptPasswordEncoder().encode(newPassword))
+                    .password(newInstancebCryptPasswordEncoder().encode(newPassword))
                     .build()));
         }
     }
