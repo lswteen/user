@@ -14,24 +14,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import io.swagger.annotations.*;
 import static com.renzo.web.response.ResponseConstants.CREATED;
 import static com.renzo.web.response.ResponseConstants.OK;
 
 @Slf4j
 @RequestMapping("/api")
 @RestController
+@Api(tags = "회원")
 @RequiredArgsConstructor
 public class UserController {
     private final UserAppService userAppService;
     private final JwtTokenProvider jwtTokenProvider;
     private final SmsCertificationService smsCertificationService;
 
-    /**
-     * 회원 가입
-     * @param request
-     * @return
-     */
+    @ApiOperation(value = "회원가입", notes = "회원가입", tags = "회원")
+    @ApiResponses({
+        @ApiResponse(code=200, message="회원가입 성공시 login 페이지 이동합니다."),
+        @ApiResponse(code=409, message="닉네임,이메일,휴대폰 번호는 유일한 식별자입니다.")
+    })
+    @ApiParam(value = "email", required = true,example = "a@gmail.com")
     @PostMapping("/user/singup")
     public String signup(UserRequest request){
         userAppService.save(request);
@@ -45,6 +47,7 @@ public class UserController {
      * 예) (아이디 혹인 전화번호) + 비밀번호 입력 하여 로그인 가능
      * @return
      */
+    @ApiOperation(value = "로그인", notes = "로그인", tags = "회원")
     @PostMapping("/user/login")
     public String login(@RequestBody UserRequest.LoginRequest loginRequest){
         UserResponse userResponse = null;
@@ -58,10 +61,7 @@ public class UserController {
         return jwtTokenProvider.createToken(userResponse.getUsername(),userResponse.getRoles());
     }
 
-    /**
-     * 내정보 보기
-     * @return
-     */
+    @ApiOperation(value = "회원정보보기", notes = "회원정보보기", tags = "회원")
     @PostMapping("/user/me")
     public UserResponse getMe(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -69,16 +69,15 @@ public class UserController {
     }
 
     /**
-     * Finding a password reset.
-     * 비밀번호 찾기 (재설정)기능
      * 로그인 되어있지 않은 상태에서 비밀번호 재설정 하는기능
      * 전화번호 인증 후 비밀번호 재설정이 가능해야함
      * @return
      */
+    @ApiOperation(value = "비밀번호 찾기 (재설정)기능", notes = "비밀번호 찾기 (재설정)기능", tags = "회원")
     @PutMapping("/user/password")
-    public UserResponse findByPasswordAndReset(String phonenumber, String newPassword){
+    public ResponseEntity<Void> findByPasswordAndReset(String phonenumber, String newPassword){
         userAppService.findByPasswordAndReset(phonenumber,newPassword);
-        return null;
+        return OK;
     }
 
     /**
@@ -87,6 +86,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/sms/certification/sends")
+    @ApiOperation(value = "SMS 인증번호 발송", notes = "SMS 인증번호 발송", tags = "회원")
     public ResponseEntity<Void> sendSms(@RequestBody UserRequest.SmsCertificationRequest requestDto) {
         smsCertificationService.sendSms(requestDto.getPhone());
         return CREATED;
@@ -97,32 +97,11 @@ public class UserController {
      * @param requestDto
      * @return
      */
+    @ApiOperation(value = "SMS 인증번호 확인", notes = "SMS 인증번호 확인", tags = "회원")
     @PostMapping("/sms/certification/confirms")
     public ResponseEntity<Void> SmsVerification(@RequestBody UserRequest.SmsCertificationRequest requestDto) {
         smsCertificationService.verifySms(requestDto);
         return OK;
     }
 
-    //----------------------------- 절대 ... 이렇게 안하는데 H2 가 아직 익숙하질 않다보니 죄송합니다... ㅜ.ㅜ -----//
-
-    @GetMapping("/testsave")
-    public UserResponse testSave(UserRequest request){
-        //FIXME : request 방어코딩 및 벨리데이션 체크 작업필요
-        request.setEmail("renzo@gmail.com");
-        request.setNickname("renzo");
-        request.setPassword("qwer1234!");
-        request.setFirstname("순우");
-        request.setLastname("리");
-        request.setPhonenumber("01033334444");
-        List<String> roles = new ArrayList<>();
-        roles.add("USER");
-        request.setRoles(roles);
-        return userAppService.save(request);
-    }
-
-    @GetMapping("/user")
-    public UserResponse getEmail(String email){
-        return userAppService.getUserByEmail(email);
-    }
-    //----------------------------- 보통 이렇게 안하는데 H2 가 아직 익숙하질 않다보니 죄송합니다... ㅜ.ㅜ-----//
 }
