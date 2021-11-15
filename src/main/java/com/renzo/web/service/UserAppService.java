@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 public class UserAppService {
 
     private final UserService userService;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private UserResponse userResponse(User user) {
         return UserResponse.builder()
@@ -31,53 +34,55 @@ public class UserAppService {
                 .build();
     }
 
-    private BCryptPasswordEncoder newInstancebCryptPasswordEncoder(){
-       return new BCryptPasswordEncoder();
-    }
-
+    @Transactional
     public UserResponse emailLogin(String email, String password){
         User user = userService.getByEmail(email);
-        if(newInstancebCryptPasswordEncoder().matches(password,user.getPassword())){
+        if(bCryptPasswordEncoder.matches(password,user.getPassword())){
             return userResponse(user);
         }else{
             throw new ApiException(ServiceErrorType.INVALID_PARAMETER);
         }
     }
 
+    @Transactional
     public UserResponse phoneLogin(String phonenumber, String password){
         User user = userService.getByPhonenumber(phonenumber);
-        if(newInstancebCryptPasswordEncoder().matches(password,user.getPassword())){
+        if(bCryptPasswordEncoder.matches(password,user.getPassword())){
             return userResponse(user);
         }else{
             throw new ApiException(ServiceErrorType.INVALID_PARAMETER);
         }
     }
 
+    @Transactional
     public UserResponse nicknameLogin(String nickname, String password){
         User user = userService.getByNickname(nickname);
-        if(newInstancebCryptPasswordEncoder().matches(password,user.getPassword())){
+        if(bCryptPasswordEncoder.matches(password,user.getPassword())){
             return userResponse(user);
         }else{
             throw new ApiException(ServiceErrorType.INVALID_PARAMETER);
         }
     }
 
+    @Transactional
     public UserResponse getUserByEmail(String email){
         return userResponse(userService.getByEmail(email));
     }
 
+    @Transactional
     public UserResponse findByPasswordAndReset(String phonenumber, String newPassword){
         User user = userService.getByPhonenumber(phonenumber);
-        if(newInstancebCryptPasswordEncoder().matches(newPassword,user.getPassword())){  //중복이면 다른걸로 넣어달라는 리턴
+        if(bCryptPasswordEncoder.matches(newPassword,user.getPassword())){  //중복이면 다른걸로 넣어달라는 리턴
             throw new ApiException(ServiceErrorType.OLDPASSWORD);
         }else{
             return userResponse(userService.save(User.builder()
                     .id(user.getId())
-                    .password(newInstancebCryptPasswordEncoder().encode(newPassword))
+                    .password(bCryptPasswordEncoder.encode(newPassword))
                     .build()));
         }
     }
 
+    @Transactional
     public UserResponse save(UserRequest request){
         userService.phoneNumberValidationCheck(request.getPhonenumber());
         userService.emailValidationCheck(request.getEmail());

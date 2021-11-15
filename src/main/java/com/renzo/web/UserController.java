@@ -7,14 +7,18 @@ import com.renzo.web.service.SmsCertificationService;
 import com.renzo.web.service.UserAppService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.swagger.annotations.*;
+import springfox.documentation.annotations.ApiIgnore;
+
 import static com.renzo.web.response.ResponseConstants.CREATED;
 import static com.renzo.web.response.ResponseConstants.OK;
 
@@ -35,9 +39,8 @@ public class UserController {
     })
     @ApiParam(value = "email", required = true,example = "a@gmail.com")
     @PostMapping("/user/singup")
-    public String signup(UserRequest request){
-        userAppService.save(request);
-        return "redirect:/login";
+    public UserResponse signup(UserRequest request){
+        return userAppService.save(request);
     }
 
     /**
@@ -47,7 +50,13 @@ public class UserController {
      * 예) (아이디 혹인 전화번호) + 비밀번호 입력 하여 로그인 가능
      * @return
      */
-    @ApiOperation(value = "로그인", notes = "로그인", tags = "회원")
+    @ApiOperation(value = "로그인",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            notes = "로그인", tags = "회원",
+            responseHeaders = {
+                    @ResponseHeader(name = HttpHeaders.CONTENT_TYPE, description = MediaType.APPLICATION_JSON_VALUE)
+            }
+    )
     @PostMapping("/user/login")
     public String login(@RequestBody UserRequest.LoginRequest loginRequest){
         UserResponse userResponse = null;
@@ -58,14 +67,21 @@ public class UserController {
         }else if(loginRequest.getType().equals("nickname")){
             userResponse = userAppService.nicknameLogin(loginRequest.getArgument(), loginRequest.getPassword());
         }
+
         return jwtTokenProvider.createToken(userResponse.getUsername(),userResponse.getRoles());
     }
 
-    @ApiOperation(value = "회원정보보기", notes = "회원정보보기", tags = "회원")
+    @ApiOperation(value = "회원정보보기",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            notes = "회원정보보기", tags = "회원",
+            responseHeaders = {
+                @ResponseHeader(name = HttpHeaders.CONTENT_TYPE, description = MediaType.APPLICATION_JSON_VALUE),
+                @ResponseHeader(name = HttpHeaders.AUTHORIZATION, description = "X-AUTH-TOKEN JWT token")
+            }
+    )
     @PostMapping("/user/me")
-    public UserResponse getMe(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userAppService.getUserByEmail(authentication.getName());
+    public UserResponse getMe(@ApiIgnore @AuthenticationPrincipal UserDetails userDetails){
+        return userAppService.getUserByEmail(userDetails.getUsername());
     }
 
     /**

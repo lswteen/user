@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Setter
-//@EqualsAndHashCode(of = "id")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

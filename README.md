@@ -5,7 +5,7 @@
 > 사용 기술 : JPA H2 security JWT Redis Swagger
 
 ## Springboot MSA 및 DDD 구조 스켈레톤 
-1. 점진적인 확작형으로 config, core, domain.user 패키지 분리
+1. 점진적인 확장형으로 config, core, domain.user 패키지 분리
 2. DDD 에서 회원에 용도를 구조적으로 분리하기 위한 바운디드 컨텍스트 활용 (https://github.com/lswteen/til-1/tree/master/book/DDD)
 3. Springboot security, JWT 활용 
 4. MSA 는 레파지스토리 파편화가 이루어지며 이를 멀티모듈로 최소화 할수 있음.
