@@ -16,8 +16,6 @@ import java.util.Set;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-    private String version;
-    private String title;
 
     private ApiInfo apiInfo(){
         return new ApiInfoBuilder()
@@ -46,10 +44,11 @@ public class SwaggerConfig {
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .apiInfo(apiInfo())
-                .groupName(version)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.ant("/api/**"))
                 .build();
    }
+
+
 }

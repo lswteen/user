@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -33,10 +34,7 @@ public class UserAppService {
                 .build();
     }
 
-//    private BCryptPasswordEncoder newInstancebCryptPasswordEncoder(){
-//       return new BCryptPasswordEncoder();
-//    }
-
+    @Transactional
     public UserResponse emailLogin(String email, String password){
         User user = userService.getByEmail(email);
         if(bCryptPasswordEncoder.matches(password,user.getPassword())){
@@ -46,6 +44,7 @@ public class UserAppService {
         }
     }
 
+    @Transactional
     public UserResponse phoneLogin(String phonenumber, String password){
         User user = userService.getByPhonenumber(phonenumber);
         if(bCryptPasswordEncoder.matches(password,user.getPassword())){
@@ -55,6 +54,7 @@ public class UserAppService {
         }
     }
 
+    @Transactional
     public UserResponse nicknameLogin(String nickname, String password){
         User user = userService.getByNickname(nickname);
         if(bCryptPasswordEncoder.matches(password,user.getPassword())){
@@ -64,10 +64,12 @@ public class UserAppService {
         }
     }
 
+    @Transactional
     public UserResponse getUserByEmail(String email){
         return userResponse(userService.getByEmail(email));
     }
 
+    @Transactional
     public UserResponse findByPasswordAndReset(String phonenumber, String newPassword){
         User user = userService.getByPhonenumber(phonenumber);
         if(bCryptPasswordEncoder.matches(newPassword,user.getPassword())){  //중복이면 다른걸로 넣어달라는 리턴
@@ -80,6 +82,7 @@ public class UserAppService {
         }
     }
 
+    @Transactional
     public UserResponse save(UserRequest request){
         userService.phoneNumberValidationCheck(request.getPhonenumber());
         userService.emailValidationCheck(request.getEmail());

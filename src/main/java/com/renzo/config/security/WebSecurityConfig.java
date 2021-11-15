@@ -33,22 +33,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable()
-                .csrf()
-                .disable()
+        http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .formLogin().disable()
-                //.httpBasic().disable()
+                .formLogin()
+                .disable()
+
                 .headers()
                 .frameOptions()
                 .disable()
+
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/user/me").hasRole("USER")
-                //.antMatchers("/h2-console/**").permitAll()
+                //.antMatchers("/api/user/me").hasRole("USER")
+                .antMatchers("/api/user/singup", "/api/user/login", "/api/user/password", "/api/sms/**", "/swagger-ui/**", "/swagger-resources/**", "/h2/**").permitAll()
                 .anyRequest()
-                .permitAll()
+                .authenticated()
+
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);//인증필터가 2번째로 URI 인터셉트
     }
