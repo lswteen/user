@@ -114,8 +114,6 @@ http://localhost:9030/swagger-ui.html
   ![스크린샷 2021-10-28 오후 10 23 38](https://user-images.githubusercontent.com/3292892/139264514-6315821c-6396-42da-90e8-a38f51c1a786.png)
   ![스크린샷 2021-10-28 오후 10 23 50](https://user-images.githubusercontent.com/3292892/139264595-1d9c898b-1004-4d38-9451-b418edd5a9e0.png)
   
-
-
 ## Features
 - **[Spring Boot](https://start.spring.io/)**: springboot 기본 생성
 - **[아키텍처]**: DDD 구조 설계 및 Core 작업 추후 점진적인 MSA 멀티모듈 가능성을위한 분리 
@@ -126,8 +124,5 @@ http://localhost:9030/swagger-ui.html
 - **Gradle**: 빌드 관리 툴, 가독성, 빌드 속도 좋음 [Maven vs Gradle](https://bkim.tistory.com/13)
 - **Rest Doc**: API문서 자동화. Swagger (시간이 있다면 Restdoc 변경예정)
 
-
-
 ## 더 고려해야할 사항
-- 패스워드 변경은 되는데 변경된 로그인으로 로그인이 안되는 현상발견
-- 로그인후 JWT토큰을 정보보기 호출시 어떻게 사용하는지를 아직 파악이 되지 않았습니다.
+- 패스워드 암호화 변경 진행

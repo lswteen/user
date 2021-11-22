@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/user/singup", "/api/user/login", "/api/user/password", "/api/sms/**", "/swagger-ui/**", "/swagger-resources/**", "/h2/**").permitAll()
+                .antMatchers("/api/user/singup", "/api/user/login", "/api/user/password", "/api/sms/**", "/h2/**").permitAll()
                 .anyRequest()
                 .authenticated()
 
